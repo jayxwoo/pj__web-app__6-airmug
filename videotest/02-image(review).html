@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video scroll animation - image</title>
+    <style>
+        html {
+            box-sizing: border-box;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: inherit;
+        }
+
+        body {
+            height: 500vh;
+        }
+
+        .img {
+            max-width: 100%;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+</head>
+
+<body>
+    <img class="img" src="../video/002/IMG_7027.JPG" alt="holding an orange cup">
+
+    <script>
+        const img = document.querySelector('.img');
+
+        // Set all image srcs in an array
+        const srcs = [];
+        const totalImgCount = 960;
+        const setImgs = function () {
+            for (let i = 0; i < totalImgCount; i++) {
+                const src = `../video/002/IMG_${7027 + i}.JPG`;
+                srcs.push(src);
+            };
+        };
+        setImgs();
+
+        // Init function
+        const init = function () {
+            window.addEventListener('scroll', () => {
+                // Scroll ratio
+                let scrollRatio = pageYOffset / (document.body.offsetHeight - window.innerHeight);
+                
+                // Prevent from scroll bouncing effect of browsers
+                if (scrollRatio < 0) {
+                    scrollRatio = 0;
+                } else if (scrollRatio > 1) {
+                    scrollRatio = 1;
+                };
+                
+                // Show imgs in order using scroll ratio
+                requestAnimationFrame(() => {
+                    let currentFrame = Math.round((totalImgCount - 1) * scrollRatio);
+                    img.src = srcs[currentFrame];
+                });
+            });
+        };
+
+        window.addEventListener('load', init);
+        
+    </script>
+</body>
+
+</html>

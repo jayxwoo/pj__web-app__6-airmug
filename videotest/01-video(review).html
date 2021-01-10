@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video scroll animation - video</title>
+    <style>
+        html { box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: inherit; }
+        body { height: 500vh; }
+        .sample-video { position: fixed; top: 0; left: 0; width: 100%; }
+    </style>
+</head>
+<body>
+    <video class="sample-video" src="../video/sample-low.mp4" muted></video>
+
+    <script>
+        const video = document.querySelector('.sample-video');
+
+        const init = function() {
+            window.addEventListener('scroll', () => {
+                // Calculate scrollRatio
+                let scrollRatio = pageYOffset / (document.body.scrollHeight - window.innerHeight);
+                console.log(scrollRatio);
+
+                // Prevent from browser scroll bouncing effect
+                if (scrollRatio < 0) {
+                    scrollRatio = 0;
+                } else if (scrollRatio > 1) {
+                    scrollRatio = 1;
+                };
+
+                // Controll video play using scrollRatio value
+                video.currentTime = video.duration * scrollRatio;
+            });
+        };
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

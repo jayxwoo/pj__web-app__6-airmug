@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html {
+            box-sizing: border-box;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: inherit;
+        }
+
+        body {
+            height: 500vh;
+        }
+
+        .canvas {
+            max-width: 100%;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+</head>
+
+<body>
+    <canvas class="canvas" width="1920" height="1080"></canvas>
+
+    <script>
+        const canvas = document.querySelector('.canvas');
+        const context = canvas.getContext('2d');
+
+        // Create and store images in an array
+        const imgs = [];
+        const totalImgCount = 960;
+        const setImgs = function () {
+            for (let i = 0; i < totalImgCount; i++) {
+                const img = new Image(); // const img = document.createElement('img');
+                img.src = `../video/002/IMG_${7027 + i}.JPG`;
+                imgs.push(img);
+            };
+        };
+        setImgs();
+
+        const calcScrollRatio = function () {
+            // Scroll ratio
+            const scrollRatio = pageYOffset / (document.body.offsetHeight - window.innerHeight);
+
+            // Prevent from scroll bouncing effect of browsers
+            if (scrollRatio < 0) {
+                scrollRatio = 0;
+            } else if (scrollRatio > 1) {
+                scrollRatio = 1;
+            };
+
+            return scrollRatio;
+        };
+
+        const calcCurrFrame = function (scrollRatio) {
+            const currentFrame = Math.round((totalImgCount - 1) * scrollRatio);
+
+            return currentFrame;
+        };
+
+        const drawImage = function (currentFrame) {
+            requestAnimationFrame(() => {
+                // Draw imgs in order using currentFrame
+                context.drawImage(imgs[currentFrame], 0, 0);
+            });
+        };
+
+        // Init function
+        const init = function () {
+            // on load
+            const scrollRatio = calcScrollRatio();
+            const currentFrame = calcCurrFrame(scrollRatio);
+            drawImage(currentFrame);
+
+            // on scroll
+            window.addEventListener('scroll', () => {
+                const scrollRatio = calcScrollRatio();
+                const currentFrame = calcCurrFrame(scrollRatio);
+                drawImage(currentFrame);
+            });
+        };
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+
+</html>
