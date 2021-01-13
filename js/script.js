@@ -109,7 +109,7 @@ class Setter {
     setBlendImgs(fileNumStart, blendImgs, totalImgCount) {
         for (let i = 0; i < totalImgCount; i++) {
             const blendImg = new Image();
-            blendImg.src = `../img/blend-image-${fileNumStart}.jpg`;
+            blendImg.src = `../img/blend-image-${fileNumStart + i}.jpg`;
             blendImgs.push(blendImg);
         };
     }
@@ -222,10 +222,24 @@ class Animator {
             context.drawImage(videoImgs[currentFrame], 0, 0);
         });
     }
-    animateBlendImgWiden(element, partScrollRatio, start, end) {
+    animateBlendImgWidth(element, partScrollRatio, start, end) {
         const value = Math.round(((end - start) * partScrollRatio) + start);
-        
         element.style.width = `${value}vw`;
+    }
+    animateBlendImg(partScrollRatio, canvas, context, currentFrame, blendImgs, start, end, sx, sWidth, dx, dWidth) {
+        const value = Math.round(((end - start) * partScrollRatio) + start);
+        const sy = canvas.height - value;
+        const dy = canvas.height - value;
+        const sHeight = value;
+        const dHeight = value;
+        requestAnimationFrame(() => {
+            context.drawImage(blendImgs[currentFrame], sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+        });
+    }
+    animateBlendImgScale(element, partScrollRatio, start, end) {
+        const value = ((end - start) * partScrollRatio) + start;
+
+        element.style.transform = `scale(${value})`;
     }
 }
 
@@ -284,10 +298,6 @@ const main = function () {
         // Calculate scroll ratio
         const scrollRatio = calculator.calcScrollRatio(yOffset, currentSectionNum);
         let currentFrame;
-
-        // Calculation for section 3 blending images
-        const canvasScrollRatioStart = (sectionInfos[3].refs.canvas.offsetTop - sectionInfos[3].refs.section.offsetTop - window.innerHeight) / sectionInfos[3].refs.section.scrollHeight;
-        const canvasScrollRatioEnd = (sectionInfos[3].refs.canvas.offsetTop - sectionInfos[3].refs.section.offsetTop) / sectionInfos[3].refs.section.scrollHeight;
 
         // Animation
         switch (currentSectionNum) {
@@ -503,15 +513,61 @@ const main = function () {
                 };
                 break;
             case 3:
-                animator.animateVideoImg(0, sectionInfos[currentSectionNum].refs.context, sectionInfos[currentSectionNum].refs.blendImgs);
-                console.log(canvasScrollRatioStart, canvasScrollRatioEnd);
-            
-                if (scrollRatio >= canvasScrollRatioStart && scrollRatio <= canvasScrollRatioEnd) {
-                    const partScrollRatio = calculator.calcPartScrollRatio(yOffset, currentSectionNum, scrollRatio, canvasScrollRatioStart, canvasScrollRatioEnd);
-                    const element = sectionInfos[currentSectionNum].refs.canvas;
-                    const widthStart = 50;
-                    const widthEnd = 100;
-                    animator.animateBlendImgWiden(element, partScrollRatio, widthStart, widthEnd);
+                const canvas = sectionInfos[currentSectionNum].refs.canvas;
+                const context = sectionInfos[currentSectionNum].refs.context
+                const section = sectionInfos[currentSectionNum].refs.section;
+                const blendImgs = sectionInfos[currentSectionNum].refs.blendImgs
+
+                animator.animateVideoImg(0, context, blendImgs);
+
+                // Calculate scrollRatio range for each parts
+                // Part 1
+                const part_1_start = 0;
+                const part_1_end = window.innerHeight / section.scrollHeight;
+                // Part 2
+                const part_2_start = part_1_end;
+                const part_2_end = (window.innerHeight * 2) / section.scrollHeight;
+                // Part 3
+                const part_3_start = part_2_end;
+                const part_3_end = (window.innerHeight * 3) / section.scrollHeight;
+                // Part 4
+                const part_4_start = part_3_end;
+                const part_4_end = (window.innerHeight * 4) / section.scrollHeight;
+
+                // Animate each part
+                // Part 1
+                if (scrollRatio > part_1_start && scrollRatio < part_1_end) {
+                    canvas.classList.remove('section-3__canvas--fixed');
+                    canvas.style.transform = 'scale(1)';
+                    const partScrollRatio = calculator.calcPartScrollRatio(yOffset, currentSectionNum, scrollRatio, part_1_start, part_1_end);
+                    animator.animateBlendImgWidth(canvas, partScrollRatio, 50, 100);
+                };
+                // Part 2
+                if (scrollRatio > part_2_start && scrollRatio < part_2_end) {
+                    canvas.style.width = '100vw';
+                    canvas.classList.add('section-3__canvas--fixed');
+                    canvas.style.transform = 'scale(1)';
+                    const partScrollRatio = calculator.calcPartScrollRatio(yOffset, currentSectionNum, scrollRatio, part_2_start, part_2_end);
+
+                    const sx = 0;
+                    const sWidth = canvas.width;
+                    const dx = 0;
+                    const dWidth = canvas.width;
+
+                    animator.animateBlendImg(partScrollRatio, canvas, context, 1, blendImgs, 0, 1080, sx, sWidth, dx, dWidth);
+                };
+                // Part 3
+                if (scrollRatio > part_3_start && scrollRatio < part_3_end) {
+                    canvas.classList.add('section-3__canvas--fixed');
+                    animator.animateVideoImg(1, context, blendImgs);
+
+                    const partScrollRatio = calculator.calcPartScrollRatio(yOffset, currentSectionNum, scrollRatio, part_3_start, part_3_end);
+                    animator.animateBlendImgScale(canvas, partScrollRatio, 1, 0.5);
+                };
+                // Part 4
+                if (scrollRatio > part_4_start && scrollRatio < part_4_end) {
+                    animator.animateVideoImg(1, context, blendImgs);
+                    canvas.classList.remove('section-3__canvas--fixed');
                 };
                 break;
         };
