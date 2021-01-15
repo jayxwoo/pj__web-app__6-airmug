@@ -226,12 +226,17 @@ class Animator {
         const value = Math.round(((end - start) * partScrollRatio) + start);
         element.style.width = `${value}vw`;
     }
-    animateBlendImg(partScrollRatio, canvas, context, currentFrame, blendImgs, start, end, sx, sWidth, dx, dWidth) {
+    animateBlendImg(partScrollRatio, canvas, context, currentFrame, blendImgs, start, end) {
         const value = Math.round(((end - start) * partScrollRatio) + start);
+        const sx = 0;
         const sy = canvas.height - value;
-        const dy = canvas.height - value;
+        const sWidth = canvas.width;
         const sHeight = value;
+        const dx = 0;
+        const dy = canvas.height - value;
+        const dWidth = canvas.width;
         const dHeight = value;
+        console.log(value);
         requestAnimationFrame(() => {
             context.drawImage(blendImgs[currentFrame], sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
         });
@@ -518,7 +523,7 @@ const main = function () {
                 const section = sectionInfos[currentSectionNum].refs.section;
                 const blendImgs = sectionInfos[currentSectionNum].refs.blendImgs
 
-                animator.animateVideoImg(0, context, blendImgs);
+                // animator.animateVideoImg(0, context, blendImgs);
 
                 // Calculate scrollRatio range for each parts
                 // Part 1
@@ -537,37 +542,51 @@ const main = function () {
                 // Animate each part
                 // Part 1
                 if (scrollRatio > part_1_start && scrollRatio < part_1_end) {
-                    canvas.classList.remove('section-3__canvas--fixed');
+                    // return to default state
+                    canvas.style.width = '100vw';
+                    canvas.style.height = '100vh';
                     canvas.style.transform = 'scale(1)';
+                    canvas.style.marginTop = '0';
+                    canvas.classList.remove('section-3__canvas--fixed');
+
+                    animator.animateVideoImg(0, context, blendImgs);
                     const partScrollRatio = calculator.calcPartScrollRatio(yOffset, currentSectionNum, scrollRatio, part_1_start, part_1_end);
                     animator.animateBlendImgWidth(canvas, partScrollRatio, 50, 100);
                 };
                 // Part 2
                 if (scrollRatio > part_2_start && scrollRatio < part_2_end) {
+                    // return to default state
                     canvas.style.width = '100vw';
-                    canvas.classList.add('section-3__canvas--fixed');
+                    canvas.style.height = '100vh';
                     canvas.style.transform = 'scale(1)';
+                    canvas.style.marginTop = '0';
+                    canvas.classList.add('section-3__canvas--fixed');
+                    
                     const partScrollRatio = calculator.calcPartScrollRatio(yOffset, currentSectionNum, scrollRatio, part_2_start, part_2_end);
-
-                    const sx = 0;
-                    const sWidth = canvas.width;
-                    const dx = 0;
-                    const dWidth = canvas.width;
-
-                    animator.animateBlendImg(partScrollRatio, canvas, context, 1, blendImgs, 0, 1080, sx, sWidth, dx, dWidth);
+                    animator.animateBlendImg(partScrollRatio, canvas, context, 1, blendImgs, 0, canvas.height);
                 };
                 // Part 3
                 if (scrollRatio > part_3_start && scrollRatio < part_3_end) {
+                    // return to default state
+                    canvas.style.width = '100vw';
+                    canvas.style.height = '100vh';
+                    canvas.style.transform = 'scale(1)';
+                    canvas.style.marginTop = '0';
                     canvas.classList.add('section-3__canvas--fixed');
                     animator.animateVideoImg(1, context, blendImgs);
 
                     const partScrollRatio = calculator.calcPartScrollRatio(yOffset, currentSectionNum, scrollRatio, part_3_start, part_3_end);
-                    animator.animateBlendImgScale(canvas, partScrollRatio, 1, 0.5);
+                    animator.animateBlendImgScale(canvas, partScrollRatio, 1, 0.6);
                 };
                 // Part 4
                 if (scrollRatio > part_4_start && scrollRatio < part_4_end) {
-                    animator.animateVideoImg(1, context, blendImgs);
+                    // return to default state
+                    canvas.style.width = '100vw';
+                    canvas.style.height = '100vh';
+                    canvas.style.transform = 'scale(0.6)';
+                    canvas.style.marginTop = `${window.innerHeight * 3}px`;
                     canvas.classList.remove('section-3__canvas--fixed');
+                    animator.animateVideoImg(1, context, blendImgs);
                 };
                 break;
         };

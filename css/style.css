@@ -78,7 +78,7 @@ body { color: var(--black); }
 .section-3__text-0 { font-size: 1.5rem; color: var(--grey); }
 .section-3__text-0 strong { color: var(--black); font-size: 3rem; }
 .section-3__text-1 { font-size: 1.2rem; color: var(--grey); text-align: left; margin-top: 100vh; border: 3px solid red; }
-.section-3__canvas { height: 100vh; width: 100vw; object-fit: cover; position: static; }
+.section-3__canvas { height: 100vh; width: 100vw; object-fit: cover; }
 .section-3__canvas--fixed { position: fixed; top: 0; left: 0; }
 
 /* footer */
