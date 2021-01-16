@@ -115,7 +115,7 @@ class Setter {
     }
 }
 
-// Calculator
+// Calculate values
 class Calculator {
     constructor(sectionInfos, globalNav, localNav, currentSectionNum) {
         this.sectionInfos = sectionInfos;
@@ -176,6 +176,7 @@ class Calculator {
     }
 }
 
+// Animate elements
 class Animator {
     constructor() {
     }
