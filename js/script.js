@@ -523,7 +523,8 @@ const main = function () {
                 const canvas = sectionInfos[currentSectionNum].refs.canvas;
                 const context = sectionInfos[currentSectionNum].refs.context
                 const section = sectionInfos[currentSectionNum].refs.section;
-                const blendImgs = sectionInfos[currentSectionNum].refs.blendImgs
+                const blendImgs = sectionInfos[currentSectionNum].refs.blendImgs;
+                const text_1 = sectionInfos[currentSectionNum].refs.text_1;
 
                 // animator.animateVideoImg(0, context, blendImgs);
 
@@ -539,7 +540,8 @@ const main = function () {
                 const part_3_end = (window.innerHeight * 3) / section.scrollHeight;
                 // Part 4
                 const part_4_start = part_3_end;
-                const part_4_end = (window.innerHeight * 4) / section.scrollHeight;
+                // Part 5
+                const part_5_start = part_4_start + 0.07;
 
                 // Animate each part
                 // Part 1
@@ -549,6 +551,8 @@ const main = function () {
                     canvas.style.transform = 'scale(1)';
                     canvas.style.marginTop = '0';
                     canvas.classList.remove('section-3__canvas--fixed');
+                    text_1.style.opacity = '0';
+                    text_1.style.transform = 'translateY(0)';
 
                     animator.animateVideoImg(0, context, blendImgs);
                     const partScrollRatio = calculator.calcPartScrollRatio(yOffset, currentSectionNum, scrollRatio, part_1_start, part_1_end);
@@ -561,6 +565,8 @@ const main = function () {
                     canvas.style.transform = 'scale(1)';
                     canvas.style.marginTop = '0';
                     canvas.classList.add('section-3__canvas--fixed');
+                    text_1.style.opacity = '0';
+                    text_1.style.transform = 'translateY(0)';
 
                     const partScrollRatio = calculator.calcPartScrollRatio(yOffset, currentSectionNum, scrollRatio, part_2_start, part_2_end);
                     animator.animateBlendImg(partScrollRatio, canvas, context, 1, blendImgs, 0, canvas.height);
@@ -573,14 +579,28 @@ const main = function () {
                     canvas.style.marginTop = '0';
                     canvas.classList.add('section-3__canvas--fixed');
                     animator.animateVideoImg(1, context, blendImgs);
+                    text_1.style.opacity = '0';
+                    text_1.style.transform = 'translateY(0)';
+                    
 
                     const partScrollRatio = calculator.calcPartScrollRatio(yOffset, currentSectionNum, scrollRatio, part_3_start, part_3_end);
                     animator.animateBlendImgScale(canvas, partScrollRatio, 1, 0.6);
                 };
                 // Part 4
-                if (scrollRatio > part_4_start && scrollRatio < part_4_end) {
+                if (scrollRatio > part_4_start) {
                     canvas.classList.remove('section-3__canvas--fixed');
                     canvas.style.marginTop = `${window.innerHeight * 2}px`;
+                    text_1.style.opacity = '0';
+                    text_1.style.transform = 'translateY(0)';
+                };
+
+                // Last paragraph
+                if (scrollRatio > part_5_start) {
+                    const partScrollRatio = calculator.calcPartScrollRatio(yOffset, currentSectionNum, scrollRatio, part_5_start, part_5_start + 0.05);
+                    
+                    animator.animateOpacityIn(text_1, partScrollRatio);
+                    text_1.style.transform = 'translateY(-20%)';
+                    text_1.style.transition = 'transform 1s ease-in-out';
                 };
                 break;
         };
