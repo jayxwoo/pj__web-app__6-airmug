@@ -35,6 +35,7 @@ body { color: var(--black); }
 .global-nav__menu-link:hover { text-decoration: underline; }
 
 .local-nav { position: absolute; top: 44px; left: 0; width: 100%; height: 54px; border-bottom: 1px solid var(--lightgrey); z-index: 11 }
+.local-nav--sticky .local-nav { position: fixed; top: 0; background: rgba(255, 255, 255, 0.1); backdrop-filter: saturate(180%) blur(15px); }
 .local-nav-container { width: 100%; max-width: 1000px; height: 100%; margin: 0 auto; padding: 0 1rem; display: flex; align-items: center; justify-content: space-between; }
 .local-nav__menu-group { display: flex; }
 .local-nav__menu-item { margin-left: 1rem; }

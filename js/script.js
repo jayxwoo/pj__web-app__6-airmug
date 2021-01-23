@@ -224,10 +224,12 @@ class Animator {
             context.drawImage(videoImgs[currentFrame], 0, 0);
         });
     }
+
     animateBlendImgWidth(element, partScrollRatio, start, end) {
         const value = Math.round(((end - start) * partScrollRatio) + start);
         element.style.width = `${value}vw`;
     }
+
     animateBlendImg(partScrollRatio, canvas, context, currentFrame, blendImgs, start, end) {
         const value = Math.round(((end - start) * partScrollRatio) + start);
         const sx = 0;
@@ -243,6 +245,7 @@ class Animator {
             context.drawImage(blendImgs[currentFrame], sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
         });
     }
+    
     animateBlendImgScale(element, partScrollRatio, start, end) {
         const value = ((end - start) * partScrollRatio) + start;
 
@@ -305,6 +308,13 @@ const main = function () {
         // Calculate scroll ratio
         const scrollRatio = calculator.calcScrollRatio(yOffset, currentSectionNum);
         let currentFrame;
+
+        // Menu
+        if (yOffset > globalNav.scrollHeight) {
+            document.body.classList.add('local-nav--sticky');
+        } else {
+            document.body.classList.remove('local-nav--sticky');
+        };
 
         // Animation
         switch (currentSectionNum) {
