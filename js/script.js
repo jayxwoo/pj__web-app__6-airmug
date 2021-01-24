@@ -221,7 +221,9 @@ class Animator {
 
     animateVideoImg(currentFrame, context, videoImgs) {
         requestAnimationFrame(() => {
-            context.drawImage(videoImgs[currentFrame], 0, 0);
+            if (videoImgs[currentFrame]) {
+                context.drawImage(videoImgs[currentFrame], 0, 0);
+            };
         });
     }
 
