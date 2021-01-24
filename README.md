@@ -23,4 +23,4 @@
     - canvas / context
 
 ## Screenshots
-![Scroll animation screenshot-01](./screenshot-01.png)
+![Scroll animation screenshot-01](./screenshot-01.gif)
