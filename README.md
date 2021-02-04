@@ -1,4 +1,7 @@
 #
+## Note
+- Page deployed to web may not show the images due to file size.
+
 ## Info
 - Title : Apple product page clone (scroll animation)
 - Author : JM Woo
